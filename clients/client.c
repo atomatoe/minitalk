@@ -1,14 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: atomatoe <atomatoe@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/27 07:27:26 by atomatoe          #+#    #+#             */
-/*   Updated: 2021/05/27 07:50:09 by atomatoe         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+// by atomatoe
 
 #include "client.h"
 
@@ -32,7 +22,7 @@ void	decimal_conversion(char ascii, int power, int pid)
 			exit(0);
 		}
 	}
-	usleep(1000);
+	usleep(100);
 }
 
 int	send_message(int server_pid, char *msg)
