@@ -1,18 +1,16 @@
-#include <unistd.h>
-#include <signal.h>
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atomatoe <atomatoe@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/27 07:27:26 by atomatoe          #+#    #+#             */
+/*   Updated: 2021/05/27 07:28:37 by atomatoe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void ft_putstr(char *str)
-{
-	int i;
-
-	i = 0;
-	while(str[i])
-	{
-		write(1, &str[i], 1);
-		i++;
-	}
-}
+#include "client.h"
 
 void        decimal_conversion(char ascii, int power, int pid)
 {
@@ -51,11 +49,24 @@ int		send_message(int server_pid, char *msg)
 	return (0);
 }
 
+void			my_handler(int signum, siginfo_t *siginfo, void *unused)
+{
+	ft_putstr("Signal received\n");
+}
+
 int main(int argc, char **argv)
 {
-    if(argc == 3)
+    struct sigaction	catch;
+
+	catch.sa_flags = SA_SIGINFO;
+	catch.sa_sigaction = my_handler;
+	if ((sigaction(SIGUSR2, &catch, 0)) == -1)
+		error("Error sigaction\n");
+	if(argc == 3)
         send_message(atoi(argv[1]), argv[2]);
     else
         ft_putstr("ERROR ARGUMENTS\n");
+	while(1)
+		pause();
 	return(0);
 }
