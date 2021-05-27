@@ -1,11 +1,11 @@
 NAME = client
 NAME2 = server
 
-FUNCTIONS = ./client/client \
-			./client/utils
+FUNCTIONS = ./clients/client \
+			./clients/utils
 
-FUNC = 		./server/server \
-			./server/utils
+FUNC = 		./servers/server \
+			./servers/utils
 
 FLAGS = -Wall -Wextra -Werror
 
@@ -27,8 +27,8 @@ $(NAME2): $(EXCH2)
 	gcc $(FLAGS) -o $@ -c $<
 
 clean:
-	/bin/rm -f ./client/*.o
-	/bin/rm -f ./server/*.o
+	/bin/rm -f ./clients/*.o
+	/bin/rm -f ./servers/*.o
 
 fclean: clean
 	/bin/rm -f $(NAME) $(NAME2)
