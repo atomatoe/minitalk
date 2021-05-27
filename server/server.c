@@ -1,8 +1,6 @@
-#include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
 #include <stdlib.h>
-#include <string.h>
 
 void ft_putstr(char *str)
 {
@@ -58,7 +56,7 @@ void my_handler(int signum)
 		ascii += 1 << (7 - power);
 	if ((power += 1) == 8)
 	{
-		putchar(ascii);
+		ft_putchar(ascii);
 		power = 0;
 		ascii = 0;
     }
@@ -71,9 +69,17 @@ int main(int argc, char **argv)
 		ft_putstr("ERROR\n");
 		exit(0);
 	}
-	signal(SIGUSR1, my_handler);
-  	signal(SIGUSR2, my_handler);
-	write(1, "Server started!\nPID: ", 24);
+	if (signal(SIGUSR1, my_handler) == SIG_ERR)
+	{
+		ft_putstr("Error signal!\n");
+		exit(0);
+	}
+	if (signal(SIGUSR2, my_handler) == SIG_ERR)
+	{
+		ft_putstr("Error signal!\n");
+		exit(0);
+	}
+	write(1, "Server started!\nPID: ", 21);
 	ft_putnbr(getpid());
 	write(1, "\n", 1);
 	while(1)

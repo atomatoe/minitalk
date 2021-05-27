@@ -1,10 +1,6 @@
-#include "stdio.h"
 #include <unistd.h>
 #include <signal.h>
-#include <math.h>
-#include <string.h>
 #include <stdlib.h>
-
 
 void ft_putstr(char *str)
 {
@@ -18,59 +14,27 @@ void ft_putstr(char *str)
 	}
 }
 
-int bin2char(int n)
-{
-	int num;
-	int dec_value;
-	int base;
-	int temp;
-	int last_digit;
-    
-    num = n;
-    base = 1;
-    dec_value = 0;
-    temp = num;
-    while (temp)
-    {
-		last_digit = temp % 10;
-		temp = temp / 10;
-		dec_value += last_digit * base;
-		base = base * 2;
-    }
-    return dec_value;
-}
-
-int dec2bin(int server_pid, int num)
-{
-    int bin = 0;
-	int k = 1;
-	int i = 0;
-
-    while (num)
-    {
-        bin += (num % 2) * k;
-        k *= 10;
-        num /= 2;
-		i++;
-    }
-    return bin;
-}
-
 void        decimal_conversion(char ascii, int power, int pid)
 {
-  if (power > 0)
-    decimal_conversion(ascii / 2, power - 1, pid);
-  if ((ascii % 2) == 1)
-  {
-	write(1, "send 1\n", 8);
-    kill(pid, SIGUSR1);
-  }
-  else
-  {
-	  write(1, "send 0\n", 8);
-	  kill(pid, SIGUSR2);
-  }
-  usleep(1000);
+	if (power > 0)
+		decimal_conversion(ascii / 2, power - 1, pid);
+	if ((ascii % 2) == 1)
+	{
+		if(kill(pid, SIGUSR1) == -1)
+		{
+			ft_putstr("Error signal!\n");
+			exit(0);
+		}
+	}
+	else
+	{
+		if(kill(pid, SIGUSR2) == -1)
+		{
+			ft_putstr("Error signal!\n");
+			exit(0);
+		}
+	}
+	usleep(1000);
 }
 
 int		send_message(int server_pid, char *msg)
