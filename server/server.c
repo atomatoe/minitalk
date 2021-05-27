@@ -4,31 +4,32 @@
 #include <stdlib.h>
 #include <string.h>
 
-int bin2char(int n)
+void ft_putstr(char *str)
 {
-    int num;
-    int dec_value;
-    int base;
-    int temp;
-    int last_digit;
-    
-    num = n;
-    base = 1;
-    dec_value = 0;
-    temp = num;
-    while (temp)
-    {
-        last_digit = temp % 10;
-        temp = temp / 10;
-        dec_value += last_digit * base;
-        base = base * 2;
-    }
-    return dec_value;
+	int i;
+
+	i = 0;
+	while(str[i])
+	{
+		write(1, &str[i], 1);
+		i++;
+	}
 }
 
-void my_putchar(char c)
+void ft_putchar(char c)
 {
 	write(1, &c, 1);
+}
+
+void	ft_putnbr(int n)
+{
+	if (n < 10)
+	{
+		ft_putchar(n + '0');
+		return ;
+	}
+	ft_putnbr(n / 10);
+	ft_putchar((n % 10) + '0');
 }
 
 void sig_to_str(int bin)
@@ -40,9 +41,9 @@ void sig_to_str(int bin)
 	if (i > 7)
 	{
 		if(c == '\0')
-			my_putchar('\n');
+			ft_putchar('\n');
 		else
-			my_putchar(c);
+			ft_putchar(c);
 		c = 0;
 		i = 0;
 	}
@@ -50,30 +51,31 @@ void sig_to_str(int bin)
 
 void my_handler(int signum)
 {
-	if (signum == SIGUSR1) {
-        sig_to_str(1); /*write(1, "reciv 1\n", 9);*/ }
-	if (signum == SIGUSR2) {
-		sig_to_str(0); /*write(1, "reciv 0\n", 9);*/ }
-}
+	static int    ascii = 0;
+	static int    power = 0;
 
-void receive_signal()
-{
-	usleep(1000);
-	if (signal(SIGUSR1, my_handler) == SIG_ERR)
-		printf("Error signal!!\n");
-	if (signal(SIGUSR2, my_handler) == SIG_ERR)
-		printf("Error signal!!\n");
+	if (signum == SIGUSR1)
+		ascii += 1 << (7 - power);
+	if ((power += 1) == 8)
+	{
+		putchar(ascii);
+		power = 0;
+		ascii = 0;
+    }
 }
 
 int main(int argc, char **argv)
 {
 	if (argc != 1)
 	{
-		printf("ERROR\n");
-		return(0);
+		ft_putstr("ERROR\n");
+		exit(0);
 	}
-	receive_signal();
-	printf("Server started!\nPID: %d\n", getpid());
+	signal(SIGUSR1, my_handler);
+  	signal(SIGUSR2, my_handler);
+	write(1, "Server started!\nPID: ", 24);
+	ft_putnbr(getpid());
+	write(1, "\n", 1);
 	while(1)
 	{
 		pause();
